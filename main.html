@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Project Manager</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+
+    <!-- Le styles -->
+    <link href="static/css/bootstrap.css" rel="stylesheet">
+    <link href="static/css/style.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../assets/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+                    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">
+                                   <link rel="shortcut icon" href="../assets/ico/favicon.png">
+  </head>
+
+  <body ng-app="TeamCollabApp">
+    <div class="row fill">
+            <div ng-controller="UserCtrl">
+
+            </div>
+            <ul id="projectNavCtrl" class="col-md-2 fill" ng-controller="ProjectNavCtrl">
+                <button ng-click="addToRoot()">+</button>
+                <li ng-repeat="project in projects" ng-include="'tree_item_renderer.html'"></li>
+            </ul>
+            <div id="projectMain" ng-controller="ProjectCtrl" class="col-md-10 fill">
+              <div id="projectTitle" class="row">
+                <div ng-hide="editTitle" class="fill">
+                  <h3 ng-click="editTitle = true">{{properties.title}}</h3>
+                </div>
+                <div ng-show="editTitle" class="fill col-md-12">
+                  <input class="fill col-md-12" ng-model="properties.title" input>
+                </div>
+              </div>
+              <div id="projectBody" class="row">
+
+                <div id="projectChat" class="col-md-9 fill">
+                  <div class="row fill">
+
+                    <div id="projectChatLog" class="col-md-12">
+                      <p id="{{post.id}}" ng-repeat="post in chatLog">
+                        {{post.username}} : {{post.text}}
+                      </p>
+                    </div><!--/projectChatLog-->
+
+                    <div id="projectChatPost" class="col-md-12">
+                        <input post-box>
+                    </div><!--/projectChatPost-->
+
+                  </div>
+                </div> <!--/projectChat-->
+
+                <div id="projectProperties" class="col-md-3 fill">
+                  <!--<div ng-repeat="field in properties">
+                    {{field.name}}: <input ng-model="field.value">
+                  </div>-->
+                  <textarea json ng-model='custom' style="background-color:{{goodPrj}}"class="col-md-12 fill" rows=13 ></textarea>
+                      <!-- json filter is already built into Angular, see http://docs.angularjs.org/api/ng.filter:json -->
+                </div> <!--/projectProperties-->
+              </div>
+            </div> <!--/projectMain-->
+    </div>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.1.1/angular.min.js"></script>
+    <script src="static/js/app.js"></script>
+    <script src="static/js/controllers.js"></script>
+    <script src="static/js/directives.js"></script>
+    <script type="text/ng-template"  id="tree_item_renderer.html">
+        <button ng-click="setProject(project)" ng-right-click="deleteNode(project)" class="btn">{{project.properties.title}}</button>
+        <button ng-click="add(project)">+</button>
+        <ul>
+            <li ng-repeat="project in project.children" ng-include="'tree_item_renderer.html'"></li>
+        </ul>
+    </script>
+    
+  </body>
+</html>
