@@ -31,7 +31,8 @@
 
             </div>
             <ul id="projectNavCtrl" class="col-md-2 fill" ng-controller="ProjectNavCtrl">
-                <button ng-click="addToRoot()">+</button>
+                <div ng-include="'contextmenu.html'"></div>
+                <button class="btn btn-success" ng-click="addRootProj()">Add Root Project</button>
                 <li ng-repeat="project in projects" ng-include="'tree_item_renderer.html'"></li>
             </ul>
             <div id="projectMain" ng-controller="ProjectCtrl" class="col-md-10 fill">
@@ -40,7 +41,9 @@
                   <h3 ng-click="editTitle = true">{{properties.title}}</h3>
                 </div>
                 <div ng-show="editTitle" class="fill col-md-12">
-                  <input class="fill col-md-12" ng-model="properties.title" input>
+                  <form ng-submit="editTitle = false">
+                    <input class="fill col-md-12" ng-model="properties.title" input>
+                  </form>
                 </div>
               </div>
               <div id="projectBody" class="row">
@@ -73,15 +76,38 @@
     </div>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.1.1/angular.min.js"></script>
+    <script src="static/js/bootstrap.min.js"></script>
+
     <script src="static/js/app.js"></script>
     <script src="static/js/controllers.js"></script>
     <script src="static/js/directives.js"></script>
     <script type="text/ng-template"  id="tree_item_renderer.html">
-        <button ng-click="setProject(project)" ng-right-click="deleteNode(project)" class="btn">{{project.properties.title}}</button>
-        <button ng-click="add(project)">+</button>
-        <ul>
+
+        <table>
+          <tr>
+            <td>
+              <button class="btn btn-default" ng-click="expand(project)" ng-show="project.collapsed">+</button>
+            </td>
+            <td>  
+              <button class="btn btn-default" ng-click="collapse(project)" ng-hide="project.collapsed">-</button>
+            </td>
+            <td>
+              <button ng-click="setProject(project)" ng-right-click="contextMenu(project)" class="btn">{{project.properties.title}}</button>
+            </td>
+          </tr>
+        </table>
+        <ul ng-show="!project.collapsed">
             <li ng-repeat="project in project.children" ng-include="'tree_item_renderer.html'"></li>
         </ul>
+    </script>
+    <script type="text/ng-template"  id="contextmenu.html">
+      <div id="contextMenu" class="dropdown clearfix">
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display:block;position:static;margin-bottom:5px;">
+          <li ng-repeat="item in contextMenuItems">
+            <a tabindex="-1" class="contextmenuitem-{{$index}}" ng-click="processContextMenu($index)">{{item.name}} </a>
+          </li>
+        </ul>
+      </div>
     </script>
     
   </body>

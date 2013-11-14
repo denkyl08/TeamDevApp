@@ -21,41 +21,87 @@ TeamCollabApp.controller('ProjectNavCtrl', ['$scope', '$rootScope', function ($s
 				id: "projectId"
 			},		
 			children : [
-			]
+			],
+            collapsed : true
 		}
 	];
 
-	$scope.delete = function(project) {
-        project.children = [];
+
+    $scope.contextProj = '';
+    
+
+    $scope.deleteProj = function(project) {
+        if (project.parent != undefined) {
+            for (var i= 0; i < project.parent.children.length; i ++) {
+                if (project.parent.children[i].properties.id == project.properties.id) {
+                    project.parent.children.splice(i, 1);
+                }
+            }
+        }
     };
 
-    $scope.deleteNode = function(project) {
-    	delete project;
-    };
-
-    $scope.add = function(project) {
-        var newName = project.properties.title;
+    $scope.addProj = function(project) {
+        console.log("in addProj");
+        project.collapsed = false;
         project.children.push({
         	properties : {
-        		title: newName
+        		title: "new"
         	},
-        	children: []
+        	children: [],
+            parent: project,
+            collapsed: true
         });
+        
     };
 
-    $scope.addToRoot = function() {
-    	var newName = "new";
-    	$scope.projects.push({
-    		properties : {
-        		title: newName
-        	},
-        	children: []
-    	});
+    $scope.addRootProj = function() {
+        $scope.projects.push({
+            properties : {
+                title: "new"
+            },
+            children: [],
+            collapsed: true
+        }); 
+    }
+
+    $scope.processContextMenu = function(index) {
+        $scope.contextMenuItems[index].action($scope.contextProj);
+        $("#contextMenu")
+        .css({
+          display: "none"
+        });
+    }
+
+    $scope.contextMenu = function(project) {
+        $scope.contextProj = project; // set global contextProj to the one just clicked
+        $("#contextMenu")
+        .css({
+          display: "block",
+          left: event.pageX,
+          top: event.pageY
+        });
+        console.log($scope.contextProj);
     }
 
 	$scope.setProject = function(project) {
 		$rootScope.$broadcast('SET_PROJECT', project);
 	}
+
+    $scope.expand = function(project) {
+        project.collapsed = false;
+    }
+
+    $scope.collapse = function(project) {
+        project.collapsed = true;
+        for(var i; i < project.children.length; i ++) {
+            project.children[i].collapsed = true;
+        }
+    }
+
+    $scope.contextMenuItems = [
+        {name:'Add Child', action: $scope.addProj },
+        {name:'Delete', action: $scope.deleteProj }
+    ]
 }]);
 
 TeamCollabApp.controller('ProjectCtrl', ['$scope', '$location', '$anchorScroll', '$compile', '$rootScope', function ($scope, $rootScope, $location, $anchorScroll, $compile) {

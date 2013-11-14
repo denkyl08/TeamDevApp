@@ -79,6 +79,7 @@ TeamCollabApp.directive('ngRightClick', function($parse) {
         element.bind('contextmenu', function(event) {
             scope.$apply(function() {
                 event.preventDefault();
+                console.log("ngRightClick");
                 fn(scope, {$event:event});
             });
         });
