@@ -8,7 +8,6 @@ A simple, scriptable, real-time collaborative web app for testing and developmen
 ###ToDos###
 
 1. Project Nav
-  * Replace UI for adding/removing nodes to a clean one (context menu?)
   * Build backend for servicing project list queries (can contain mock data for now)
 
 2. Chat

@@ -28,6 +28,22 @@ TeamCollabApp.directive('jsonProperty', function () {
   };
 });
 
+TeamCollabApp.directive('clickAnywhereButHere', function($document){
+  return {
+    restrict: 'A',
+    link: function(scope, elem, attr, ctrl) {
+      elem.bind('click', function(e) {
+        // this part keeps it from firing the click on the document.
+        e.stopPropagation();
+      });
+      $document.bind('click', function() {
+        // magic here.
+        scope.$apply(attr.clickAnywhereButHere);
+      })
+    }
+  }
+})
+
 TeamCollabApp.directive('json', function() {
   return {
     restrict: 'A', // only activate on element attribute
@@ -79,7 +95,6 @@ TeamCollabApp.directive('ngRightClick', function($parse) {
         element.bind('contextmenu', function(event) {
             scope.$apply(function() {
                 event.preventDefault();
-                console.log("ngRightClick");
                 fn(scope, {$event:event});
             });
         });

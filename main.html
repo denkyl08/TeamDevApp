@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Project Manager</title>
+    <title>TeamDevApp</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -26,16 +26,19 @@
   </head>
 
   <body ng-app="TeamCollabApp">
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <a class="navbar-brand" href="#">TeamDevApp</a>
+    </nav>
     <div class="row fill">
             <div ng-controller="UserCtrl">
 
             </div>
-            <ul id="projectNavCtrl" class="col-md-2 fill" ng-controller="ProjectNavCtrl">
+            <ul id="projectNavCtrl" class="col-md-3 fill" ng-controller="ProjectNavCtrl">
                 <div ng-include="'contextmenu.html'"></div>
                 <button class="btn btn-success" ng-click="addRootProj()">Add Root Project</button>
                 <li ng-repeat="project in projects" ng-include="'tree_item_renderer.html'"></li>
             </ul>
-            <div id="projectMain" ng-controller="ProjectCtrl" class="col-md-10 fill">
+            <div id="projectMain" ng-controller="ProjectCtrl" class="col-md-9 fill">
               <div id="projectTitle" class="row">
                 <div ng-hide="editTitle" class="fill">
                   <h3 ng-click="editTitle = true">{{properties.title}}</h3>
@@ -85,10 +88,10 @@
 
         <table>
           <tr>
-            <td>
+            <td ng-show="projectContainsChildren(project)">
               <button class="btn btn-default" ng-click="expand(project)" ng-show="project.collapsed">+</button>
             </td>
-            <td>  
+            <td ng-show="projectContainsChildren(project)">  
               <button class="btn btn-default" ng-click="collapse(project)" ng-hide="project.collapsed">-</button>
             </td>
             <td>
@@ -102,7 +105,8 @@
     </script>
     <script type="text/ng-template"  id="contextmenu.html">
       <div id="contextMenu" class="dropdown clearfix">
-        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display:block;position:static;margin-bottom:5px;">
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display:block;position:static;margin-bottom:5px;"
+          click-anywhere-but-here="processContextMenu(-1)">
           <li ng-repeat="item in contextMenuItems">
             <a tabindex="-1" class="contextmenuitem-{{$index}}" ng-click="processContextMenu($index)">{{item.name}} </a>
           </li>

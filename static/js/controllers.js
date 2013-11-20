@@ -29,6 +29,9 @@ TeamCollabApp.controller('ProjectNavCtrl', ['$scope', '$rootScope', function ($s
 
     $scope.contextProj = '';
     
+    $scope.projectContainsChildren = function(project) {
+        return project.children.length > 0;
+    }
 
     $scope.deleteProj = function(project) {
         if (project.parent != undefined) {
@@ -65,7 +68,9 @@ TeamCollabApp.controller('ProjectNavCtrl', ['$scope', '$rootScope', function ($s
     }
 
     $scope.processContextMenu = function(index) {
-        $scope.contextMenuItems[index].action($scope.contextProj);
+        if (index >= 0) {
+            $scope.contextMenuItems[index].action($scope.contextProj);
+        }
         $("#contextMenu")
         .css({
           display: "none"
@@ -74,11 +79,13 @@ TeamCollabApp.controller('ProjectNavCtrl', ['$scope', '$rootScope', function ($s
 
     $scope.contextMenu = function(project) {
         $scope.contextProj = project; // set global contextProj to the one just clicked
+        console.log(event.pageY);
+        console.log(($("body").css('padding-top')).replace('px', ''));
         $("#contextMenu")
         .css({
           display: "block",
           left: event.pageX,
-          top: event.pageY
+          top: event.pageY-($("body").css('padding-top')).replace('px', '') 
         });
         console.log($scope.contextProj);
     }
