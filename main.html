@@ -50,7 +50,9 @@
                 </div>
               </div>
               <div id="projectBody" class="row">
-
+                <ul class="nav nav-tabs">
+                  <li class="{{pluginActive(plugin)}}" ng-repeat="plugin in plugins" ><a ng-click="setPlugin(plugin)">{{ plugin.title }}</a></li>
+                </ul>
                 <div id="projectChat" class="col-md-9 fill">
                   <div class="row fill">
 
@@ -78,10 +80,12 @@
             </div> <!--/projectMain-->
     </div>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.1.1/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.1/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.1/angular-route.min.js"></script>
     <script src="static/js/bootstrap.min.js"></script>
 
     <script src="static/js/app.js"></script>
+    <script src="static/js/services.js"></script>
     <script src="static/js/controllers.js"></script>
     <script src="static/js/directives.js"></script>
     <script type="text/ng-template"  id="tree_item_renderer.html">
@@ -95,7 +99,7 @@
               <button class="btn btn-default" ng-click="collapse(project)" ng-hide="project.collapsed">-</button>
             </td>
             <td>
-              <button ng-click="setProject(project)" ng-right-click="contextMenu(project)" class="btn">{{project.properties.title}}</button>
+              <a href="#project/{{project.properties.id}}" ng-right-click="contextMenu(project)" class="btn">{{project.properties.title}}</a>
             </td>
           </tr>
         </table>

@@ -13,18 +13,8 @@ TeamCollabApp.controller('UserCtrl', ['$scope', '$rootScope', function ($scope, 
     $scope.currentProjects = [];
 }]);
 
-TeamCollabApp.controller('ProjectNavCtrl', ['$scope', '$rootScope', function ($scope, $rootScope){
-	$scope.projects = [
-		{
-			properties : {
-				title: "projectName1", 
-				id: "projectId"
-			},		
-			children : [
-			],
-            collapsed : true
-		}
-	];
+TeamCollabApp.controller('ProjectNavCtrl', ['$scope', '$rootScope', 'projectListService', function ($scope, $rootScope, projectListService){
+	$scope.projects = projectListService.getList();
 
 
     $scope.contextProj = '';
@@ -111,13 +101,38 @@ TeamCollabApp.controller('ProjectNavCtrl', ['$scope', '$rootScope', function ($s
     ]
 }]);
 
-TeamCollabApp.controller('ProjectCtrl', ['$scope', '$location', '$anchorScroll', '$compile', '$rootScope', function ($scope, $rootScope, $location, $anchorScroll, $compile) {
+TeamCollabApp.controller('ProjectCtrl', [ '$scope', '$location', 'projectService', '$anchorScroll', '$compile', '$rootScope', '$routeParams', '$route', function ($scope, $rootScope, projectService, $location, $anchorScroll, $compile, $routeParams, $route) {
 	$scope.properties = {
 		title : "titleval",
 		id : "idval"
 	}
     $scope.chatLog = [];
+
+    $scope.plugins = [
+        {title: "Chat", isActive:true},
+        {title: "Properties", isActive:false}
+    ]
     	
+    $scope.projectId = $routeParams.projectId;
+
+    $scope.$on(
+        "$routeChangeSuccess",
+        function( $currentRoute, $previousRoute ){
+            $scope.projectId = $routeParams.projectId;
+            var project = projectService.getProject($routeParams.projectId);
+            if (project.chatLog != undefined) {$scope.chatLog = project.chatLog;}
+            else {$scope.chatLog = [];}
+            if (project.plugins != undefined) {$scope.plugins = project.plugins;}
+            else {$scope.plugins = [
+                {title: "Chat", isActive:true},
+                {title: "Properties", isActive:false}
+            ];}
+            if (project.properties != undefined) {$scope.properties = project.properties;}
+            else {$scope.properties = {};}
+            if (project.custom != undefined) {$scope.custom = project.custom;}
+            else {$scope.custom = {};}
+        }
+    );
 
     $scope.submitChatPost = function() {
     	if ($scope.Post.length == 0) {
@@ -138,9 +153,27 @@ TeamCollabApp.controller('ProjectCtrl', ['$scope', '$location', '$anchorScroll',
 	    	console.log($('#'+String($scope.chatLog.length))[0].scrollIntoView(true));
 	    }, 100)
 
+	    console.log($scope.properties.id);
+        var project = projectService.getProject($scope.properties.id);
+        if (project.chatLog == undefined) {project.chatLog = [];}
+        project.chatLog.push(chatPost);
 	    $scope.Post = '';
-	    return;
+        return;
     };
+
+    $scope.pluginActive = function(plugin) {
+        if (plugin.isActive) {
+            return "active"
+        }
+        return ""
+    }
+
+    $scope.setPlugin = function(plugin) {
+        angular.forEach($scope.plugins, function(plugin, i) {
+            plugin.isActive = false
+        });
+        plugin.isActive = true;
+    }
 
     $scope.$on('SET_PROJECT', function ( event, project ) { 
     	$scope.properties = project.properties;
