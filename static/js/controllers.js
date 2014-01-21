@@ -1,15 +1,7 @@
 //Controllers
-var globalVars = {};
 
-TeamCollabApp.controller('UserCtrl', ['$scope', '$rootScope', function ($scope, $rootScope) {
-      // Let's namespace the user details
-    // Also great for DOM visual aids too
-    $scope.user = {};
-    $scope.user.details = {
-      "username": "Kyle Dennison",
-      "id": "89101112"
-    };
-    globalVars.user = $scope.user.details;
+TeamCollabApp.controller('UserCtrl', ['$scope', '$rootScope', 'User', function ($scope, $rootScope, User) {
+    User.setUser("89101112", "Kyle Dennison");
     $scope.currentProjects = [];
 }]);
 
@@ -98,7 +90,7 @@ TeamCollabApp.controller('ProjectNavCtrl', ['$scope', '$rootScope', 'projectList
     ]
 }]);
 
-TeamCollabApp.controller('ProjectCtrl', [ '$scope', '$location', 'projectService', '$anchorScroll', '$compile', '$rootScope', '$routeParams', '$route', function ($scope, $rootScope, projectService, $location, $anchorScroll, $compile, $routeParams, $route) {
+TeamCollabApp.controller('ProjectCtrl', [ '$scope', '$location', 'projectService', '$anchorScroll', '$compile', '$rootScope', '$routeParams', '$route', 'User', function ($scope, $rootScope, projectService, $location, $anchorScroll, $compile, $routeParams, $route, User) {
 	$scope.properties = {
 		title : "titleval",
 		id : "idval"
@@ -141,9 +133,10 @@ TeamCollabApp.controller('ProjectCtrl', [ '$scope', '$location', 'projectService
     	if (!$scope.chatLog) {
     		$scope.chatLog = [];
     	}
+    	var thisUser = User.getUser();
     	var chatPost = {
-    		user : globalVars.user,
-    		username : globalVars.user.username,
+    		user : thisUser,
+    		username : thisUser.username,
     		id: String($scope.chatLog.length+1),
     		text : $scope.Post
     	}

@@ -1,3 +1,20 @@
+TeamCollabApp.factory('User', function() {
+	this.user = {};
+	return {
+		getUser: function() {
+			var user = this.user;
+			return user;
+		},
+		setUser: function(id, username) {
+			this.user = {
+				username: "Kyle Dennison",
+				id: 89101112
+			};
+		}
+	}
+});
+
+
 TeamCollabApp.factory('projectListService', function() {
 	return {
 		getList : function() {
