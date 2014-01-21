@@ -67,17 +67,14 @@ TeamCollabApp.controller('ProjectNavCtrl', ['$scope', '$rootScope', 'projectList
         });
     }
 
-    $scope.contextMenu = function(project) {
+    $scope.contextMenu = function(project, event) {
         $scope.contextProj = project; // set global contextProj to the one just clicked
-        console.log(event.pageY);
-        console.log(($("body").css('padding-top')).replace('px', ''));
         $("#contextMenu")
         .css({
           display: "block",
           left: event.pageX,
           top: event.pageY-($("body").css('padding-top')).replace('px', '') 
         });
-        console.log($scope.contextProj);
     }
 
 	$scope.setProject = function(project) {
@@ -120,6 +117,9 @@ TeamCollabApp.controller('ProjectCtrl', [ '$scope', '$location', 'projectService
         function( $currentRoute, $previousRoute ){
             $scope.projectId = $routeParams.projectId;
             var project = projectService.getProject($routeParams.projectId);
+            if (project == undefined) {
+                return;
+            }
             if (project.chatLog != undefined) {$scope.chatLog = project.chatLog;}
             else {$scope.chatLog = [];}
             if (project.plugins != undefined) {$scope.plugins = project.plugins;}

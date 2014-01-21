@@ -90,12 +90,13 @@ TeamCollabApp.directive('json', function() {
 });
 
 TeamCollabApp.directive('ngRightClick', function($parse) {
-    return function(scope, element, attrs) {
+    return function($scope, element, attrs) {
         var fn = $parse(attrs.ngRightClick);
         element.bind('contextmenu', function(event) {
-            scope.$apply(function() {
+            $scope.$apply(function() {
                 event.preventDefault();
-                fn(scope, {$event:event});
+                $scope.event = event;
+                fn($scope, event);
             });
         });
     };

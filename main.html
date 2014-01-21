@@ -99,7 +99,7 @@
               <button class="btn btn-default" ng-click="collapse(project)" ng-hide="project.collapsed">-</button>
             </td>
             <td>
-              <a href="#project/{{project.properties.id}}" ng-right-click="contextMenu(project)" class="btn">{{project.properties.title}}</a>
+              <a href="#project/{{project.properties.id}}" ng-right-click="contextMenu(project, event)" class="btn">{{project.properties.title}}</a>
             </td>
           </tr>
         </table>
